@@ -1,6 +1,6 @@
-package com.teleco.share_cart_backend.cart;
+package com.teleco.share_cart_backend.repository;
 
-import lombok.Data;
+import com.teleco.share_cart_backend.models.Cart;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

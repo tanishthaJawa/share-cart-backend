@@ -1,8 +1,7 @@
-package com.teleco.share_cart_backend.user;
+package com.teleco.share_cart_backend.models;
 
-import com.teleco.share_cart_backend.cart.Cart;
+import com.teleco.share_cart_backend.models.Cart;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import lombok.Getter;
 import lombok.Setter;
 

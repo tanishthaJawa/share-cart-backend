@@ -1,8 +1,6 @@
-package com.teleco.share_cart_backend.cart;
+package com.teleco.share_cart_backend.models;
 
-import com.teleco.share_cart_backend.user.User;
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,6 +17,9 @@ public class Cart {
     private Long id;
     @Column
     private String device;
+
+    private boolean isShared;
+
     @Column
     private String phonePlan;
     @Column
@@ -27,6 +28,9 @@ public class Cart {
     @ManyToOne
     private User primaryAccountHolder;
 
+    private String shareToken; // Unique token for sharing the cart
+
+
     @ManyToMany
     @JoinTable(
             name = "cart_shared_with",
@@ -34,6 +38,10 @@ public class Cart {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private List<User> sharedWithUsers;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cart_id")
+    private List<CartItem> items;
 
     // Getters and Setters
 }

@@ -1,4 +1,4 @@
-package com.teleco.share_cart_backend.user;
+package com.teleco.share_cart_backend.dtos;
 
 import lombok.*;
 
