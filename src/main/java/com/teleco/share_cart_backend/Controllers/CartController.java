@@ -3,8 +3,8 @@ package com.teleco.share_cart_backend.Controllers;
 import com.google.zxing.WriterException;
 import com.teleco.share_cart_backend.models.Cart;
 import com.teleco.share_cart_backend.Services.CartService;
-import com.teleco.share_cart_backend.models.CartItem;
 import com.teleco.share_cart_backend.Services.QrCodeService;
+import com.teleco.share_cart_backend.models.Product;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping(path ="api/cart")
+@RequestMapping(path ="api/carts")
 @CrossOrigin(origins ="*")
 @Slf4j
 public class CartController {
@@ -83,7 +83,7 @@ public class CartController {
 
     // Add an item to a cart
     @PostMapping("/add-item/{cartId}")
-    public ResponseEntity<Cart> addItemToCart(@PathVariable Long cartId, @RequestBody CartItem item) {
+    public ResponseEntity<Cart> addItemToCart(@PathVariable Long cartId, @RequestBody Product item) {
         Cart cart = cartService.addItemToCart(cartId, item);
         return ResponseEntity.ok(cart);
     }

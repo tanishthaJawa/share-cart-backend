@@ -1,8 +1,8 @@
 package com.teleco.share_cart_backend.Services;
 
 import com.teleco.share_cart_backend.models.Cart;
+import com.teleco.share_cart_backend.models.Product;
 import com.teleco.share_cart_backend.repository.CartRepository;
-import com.teleco.share_cart_backend.models.CartItem;
 import com.teleco.share_cart_backend.models.User;
 import com.teleco.share_cart_backend.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -18,9 +18,6 @@ public class CartService {
 
     @Autowired
     private UserRepository userRepository;
-
-   // @Autowired
-    //QrCodeService qrCodeService;
 
     public Cart getCartById(Long id) {
         return cartRepository.findById(id).orElseThrow(() -> new RuntimeException("Cart not found"));
@@ -50,16 +47,16 @@ public class CartService {
     }
 
     // Add items to the cart
-    public Cart addItemToCart(Long cartId, CartItem item) {
+    public Cart addItemToCart(Long cartId, Product item) {
         Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new RuntimeException("Cart not found"));
-        cart.getItems().add(item);
+        cart.getProductList().add(item);
         return cartRepository.save(cart);
     }
 
     // Remove item from the cart
-    public Cart removeItemFromCart(Long cartId, Long itemId) {
+    public Cart removeItemFromCart(Long cartId, Long productItemId) {
         Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new RuntimeException("Cart not found"));
-        cart.getItems ().removeIf(item -> item.getId().equals(itemId));
+        cart.getProductList().removeIf(item -> item.getId() .equals(productItemId));
         return cartRepository.save(cart);
     }
 

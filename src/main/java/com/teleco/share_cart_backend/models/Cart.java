@@ -41,7 +41,7 @@ public class Cart {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "cart_id")
-    private List<CartItem> items;
+    private List<Product> productList;
 
     // Getters and Setters
 }
