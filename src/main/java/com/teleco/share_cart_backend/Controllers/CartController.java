@@ -46,12 +46,12 @@ public class CartController {
 
     // Share a cart with QR code with other users
     @PostMapping("/share/{cartId}")
-    public ResponseEntity<byte[]> shareCart(@PathVariable String cartId, @RequestBody List<String> userIds ) {
+    public ResponseEntity<byte[]> shareCart(@PathVariable String cartId ) {
         // Share the cart with the specified users
-        Cart cart = cartService.shareCart(cartId, userIds);
+     
 
         // Generate the unique link for the shared cart
-        String uniqueLink = CartService.generateUniqueLink(cart.getId());
+        String uniqueLink = CartService.generateUniqueLink(cartId);
 
         // Generate the QR code and return it as a byte array (PNG format)
         try {
@@ -82,18 +82,19 @@ public class CartController {
 //    }
 
     // Add an item to a cart
-//    @PostMapping("/add-item/{cartId}")
-//    public ResponseEntity<Cart> addItemToCart(@PathVariable Long cartId, @RequestBody CartDetails item) {
-//        Cart cart = cartService.addItemToCart(cartId, item);
-//        return ResponseEntity.ok(cart);
-//    }
+    @PostMapping("/add-item/{cartId}")
+    public ResponseEntity<CartDetails> addItemToCart(@PathVariable String cartId,@RequestBody CartDetails items) {
+    	
+        CartDetails cart = cartService.addItemToCart(cartId,items);
+        return ResponseEntity.ok(cart);
+    }
 
-    // Remove an item from a cart
-//    @DeleteMapping("/remove-item/{cartId}/{itemId}")
-//    public ResponseEntity<Cart> removeItemFromCart(@PathVariable Long cartId, @PathVariable Long itemId) {
-//        Cart cart = cartService.removeItemFromCart(cartId, itemId);
-//        return ResponseEntity.ok(cart);
-//    }
+     //Remove an item from a cart
+    @DeleteMapping("/remove-item/{cartId}/{itemId}")
+    public ResponseEntity<String> removeItemFromCart(@PathVariable String cartId, @PathVariable String itemId) {
+         List<CartDetails> cartDetails=cartService.removeItemFromCart(cartId, itemId);
+        return ResponseEntity.ok("Item Removed");
+    }
 
 
 

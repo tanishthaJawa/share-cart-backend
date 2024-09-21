@@ -1,17 +1,21 @@
 package com.teleco.share_cart_backend.Services;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.stereotype.Service;
 
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import com.teleco.share_cart_backend.models.Cart;
 import com.teleco.share_cart_backend.models.CartDetails;
 import com.teleco.share_cart_backend.models.Users;
 import com.teleco.share_cart_backend.repository.CartDetailsRepo;
 import com.teleco.share_cart_backend.repository.CartRepository;
+import com.teleco.share_cart_backend.repository.GuestUsersRepository;
 import com.teleco.share_cart_backend.repository.UserRepository;
 
 
@@ -22,16 +26,24 @@ public class CartService {
     private CartRepository cartRepository;
     
     @Autowired
+	UserRepository userRepo;
+    
+    
+    
+    @Autowired
     private CartDetailsRepo cartDetailsRepository;
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired 
+    private GuestUsersRepository guestUserRepository;
+    
 
    // @Autowired
     //QrCodeService qrCodeService;
 
-    public Cart getCartById(String id) {
-        return cartRepository.findById(id).orElseThrow(() -> new RuntimeException("Cart not found"));
+    public List<CartDetails> getCartById(String id) {
+        return cartDetailsRepository.findAllByCartId(id);
     }
     // Create a new cart for the primary user
     public Cart createCart(String userId) {
@@ -43,12 +55,9 @@ public class CartService {
     }
 
     // Add users to share the cart with
-    public Cart shareCart(String cartId, List<String> userIds) {
-        Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new RuntimeException("Cart not found"));
-        List<Users> users = userRepository.findAllById(userIds);
-//        cart.setSharedWithUsers(users);
-//        cart.setShared(true);
-        return cartRepository.save(cart);
+    public Cart shareCart(String cartId) {
+    	 Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new RuntimeException("Cart not found"));
+    	 return cart;
     }
 
     // Get carts shared with a specific user
@@ -57,22 +66,23 @@ public class CartService {
 //        return user.getSharedCarts();
 //    }
 
-    // Add items to the cart
-//    public Cart addItemToCart(Long cartId, CartDetails item) {
-//        Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new RuntimeException("Cart not found"));
-//        cart.getItems().add(item);
-//        return cartRepository.save(cart);
-//    }
+     //Add items to the cart
+    public CartDetails addItemToCart(String cartId,CartDetails item) {
+        Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new RuntimeException("Cart not found"));
+        if(cartRepository.existsById(cartId)) {
+        	return cartDetailsRepository.save(item);
+        }
+        return null;
+    }
 
-    // Remove item from the cart
-//    public CartDetails removeItemFromCart(Long cartId, Long itemId) {
-//        List<CartDetails> cartDetails =  cartDetailsRepository.findAllByCartId(cartId);
-//        for(CartDetails cart:cartDetails)
-//        {
-//        	cart.getProduct().removeIf
-//        }
-//        return cartDetailsRepository.save(cart);
-//    }
+     //Remove item from the cart
+    public List<CartDetails> removeItemFromCart(String cartId, String itemId) {
+        List<CartDetails> cartDetails =  cartDetailsRepository.findAllByCartId(cartId);
+        
+        	cartDetails.removeIf(cart->cart.getProduct().getId().equals(itemId));
+        
+        return cartDetailsRepository.saveAll(cartDetails);
+    }
 
     public static String generateUniqueLink(String cartId) {
         String uniqueToken = UUID.randomUUID().toString(); // Generates a unique identifier
