@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import com.teleco.share_cart_backend.models.Users;
 
 @Repository
-public interface UserRepository extends MongoRepository<Users,Long> {
+public interface UserRepository extends MongoRepository<Users,String> {
 }

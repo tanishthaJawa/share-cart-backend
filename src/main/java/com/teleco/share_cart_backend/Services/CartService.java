@@ -30,11 +30,11 @@ public class CartService {
    // @Autowired
     //QrCodeService qrCodeService;
 
-    public Cart getCartById(Long id) {
+    public Cart getCartById(String id) {
         return cartRepository.findById(id).orElseThrow(() -> new RuntimeException("Cart not found"));
     }
     // Create a new cart for the primary user
-    public Cart createCart(Long userId) {
+    public Cart createCart(String userId) {
         Users user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         Cart cart = new Cart();
 //        cart.setPrimaryAccountHolder(user);
@@ -43,7 +43,7 @@ public class CartService {
     }
 
     // Add users to share the cart with
-    public Cart shareCart(Long cartId, List<Long> userIds) {
+    public Cart shareCart(String cartId, List<String> userIds) {
         Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new RuntimeException("Cart not found"));
         List<Users> users = userRepository.findAllById(userIds);
 //        cart.setSharedWithUsers(users);
@@ -74,10 +74,10 @@ public class CartService {
 //        return cartDetailsRepository.save(cart);
 //    }
 
-    public static String generateUniqueLink(Long cartId) {
+    public static String generateUniqueLink(String cartId) {
         String uniqueToken = UUID.randomUUID().toString(); // Generates a unique identifier
         String baseUrl = "https://yourapp.com/cart"; // The base URL for your cart
-        return baseUrl + "/" + cartId + "?token=" + uniqueToken;
+        return baseUrl + "/" + cartId ;
     }
 
 }

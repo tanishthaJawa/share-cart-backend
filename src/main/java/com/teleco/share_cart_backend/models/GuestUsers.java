@@ -12,7 +12,7 @@ public class GuestUsers {
 
     @Id
    
-    private Long guestId;
+    private Long id;
 
     private String contactNo;
 
@@ -25,11 +25,11 @@ public class GuestUsers {
     // Getters and Setters
 
     public Long getGuestId() {
-        return guestId;
+        return id;
     }
 
     public void setGuestId(Long guestId) {
-        this.guestId = guestId;
+        this.id = guestId;
     }
 
     public String getContactNo() {

@@ -9,9 +9,9 @@ import com.teleco.share_cart_backend.models.CartDetails;
 
 @Repository
 public interface CartDetailsRepo extends MongoRepository
-<CartDetails, Integer> {
+<CartDetails, String> {
 
-	List<CartDetails> findAllByCartId(Long cartId);
+	List<CartDetails> findAllByCartId(String cartId);
 
 
 

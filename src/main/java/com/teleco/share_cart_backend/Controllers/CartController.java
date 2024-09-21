@@ -39,19 +39,19 @@ public class CartController {
 
 
     @PostMapping("/create/{userId}")
-    public ResponseEntity<Cart> createCart(@PathVariable Long userId) {
+    public ResponseEntity<Cart> createCart(@PathVariable String userId) {
         Cart cart = cartService.createCart(userId);
         return ResponseEntity.ok(cart);
     }
 
     // Share a cart with QR code with other users
     @PostMapping("/share/{cartId}")
-    public ResponseEntity<byte[]> shareCart(@PathVariable Long cartId, @RequestBody List<Long> userIds ) {
+    public ResponseEntity<byte[]> shareCart(@PathVariable String cartId, @RequestBody List<String> userIds ) {
         // Share the cart with the specified users
         Cart cart = cartService.shareCart(cartId, userIds);
 
         // Generate the unique link for the shared cart
-        String uniqueLink = CartService.generateUniqueLink(cart.getCartId());
+        String uniqueLink = CartService.generateUniqueLink(cart.getId());
 
         // Generate the QR code and return it as a byte array (PNG format)
         try {
