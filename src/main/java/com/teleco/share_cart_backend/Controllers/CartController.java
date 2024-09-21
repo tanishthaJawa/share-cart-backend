@@ -1,6 +1,7 @@
 package com.teleco.share_cart_backend.Controllers;
 
 import com.google.zxing.WriterException;
+import com.teleco.share_cart_backend.Services.NotificationService;
 import com.teleco.share_cart_backend.models.Cart;
 import com.teleco.share_cart_backend.Services.CartService;
 import com.teleco.share_cart_backend.models.CartDetails;
@@ -27,6 +28,9 @@ public class CartController {
 
     @Autowired
     private CartService cartService;
+
+    @Autowired
+    NotificationService notificationService;
 
 //    @GetMapping("/{id}")
 //    public ResponseEntity<Cart> getSharedCart(@PathVariable Long id, @RequestParam String token) {

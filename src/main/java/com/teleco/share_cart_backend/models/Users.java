@@ -28,5 +28,6 @@ public class Users {
     
     private String address;
 
+    private String password;
     // Getters and Setters
 }
