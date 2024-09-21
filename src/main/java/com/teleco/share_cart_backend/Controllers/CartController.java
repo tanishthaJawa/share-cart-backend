@@ -1,10 +1,14 @@
 package com.teleco.share_cart_backend.Controllers;
 
+import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.zxing.WriterException;
+import com.teleco.share_cart_backend.Services.NotificationService;
+import com.teleco.share_cart_backend.Services.UserService;
 import com.teleco.share_cart_backend.models.Cart;
 import com.teleco.share_cart_backend.Services.CartService;
 import com.teleco.share_cart_backend.Services.QrCodeService;
 import com.teleco.share_cart_backend.models.Product;
+import com.teleco.share_cart_backend.models.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -28,6 +32,11 @@ public class CartController {
     @Autowired
     private CartService cartService;
 
+    @Autowired
+    NotificationService notificationService;
+
+    @Autowired
+    UserService userService;
     @GetMapping("/{id}")
     public ResponseEntity<Cart> getSharedCart(@PathVariable Long id, @RequestParam String token) {
         Cart cart = cartService.getCartById(id);
@@ -93,6 +102,24 @@ public class CartController {
     public ResponseEntity<Cart> removeItemFromCart(@PathVariable Long cartId, @PathVariable Long itemId) {
         Cart cart = cartService.removeItemFromCart(cartId, itemId);
         return ResponseEntity.ok(cart);
+    }
+
+    @PostMapping("/notify/{cartId}")
+    public ResponseEntity<String> sendCartNotification(@PathVariable Long cartId, @RequestBody List<Long> userIds) {
+        // Share cart logic...
+
+         List<User> userList = userService.getUsersByUserIds(userIds);
+        // Send notifications to all users
+        userList.forEach(user -> {
+            try {
+                notificationService.sendNotification(cartService.getCartById(cartId).getShareToken(), "Cart Shared", "A cart has been shared with you!");
+            } catch (FirebaseMessagingException e) {
+                e.printStackTrace();
+            }
+        });
+
+        return ResponseEntity.ok("Cart shared successfully!");
+
     }
 
 
