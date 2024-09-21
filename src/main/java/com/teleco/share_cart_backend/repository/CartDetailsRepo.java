@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.teleco.share_cart_backend.models.CartDetails;
 
 @Repository
-public interface ProductRepository extends MongoRepository
+public interface CartDetailsRepo extends MongoRepository
 <CartDetails, Integer> {
 
 	List<CartDetails> findAllByCartId(Long cartId);

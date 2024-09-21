@@ -1,47 +1,45 @@
 package com.teleco.share_cart_backend.models;
 
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 
-import java.util.List;
-
-@Entity
-@Table(name ="cart")
-@Getter
-@Setter
+@Document(collection = "cart")
 public class Cart {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column
-    private String device;
+    private Long cartId;
 
-    private boolean isShared;
+    @DBRef
+    private Users user;
 
-    @Column
-    private String phonePlan;
-    @Column
-    private boolean isUpgrade;
-
-    @ManyToOne
-    private User primaryAccountHolder;
-
-    private String shareToken; // Unique token for sharing the cart
-
-
-    @ManyToMany
-    @JoinTable(
-            name = "cart_shared_with",
-            joinColumns = @JoinColumn(name = "cart_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private List<User> sharedWithUsers;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cart_id")
-    private List<Product> productList;
+   
+    private double price;
 
     // Getters and Setters
+
+    public Long getCartId() {
+        return cartId;
+    }
+
+    public void setCartId(Long cartId) {
+        this.cartId = cartId;
+    }
+
+    public Users getUser() {
+        return user;
+    }
+
+    public void setUser(Users user) {
+        this.user = user;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
 }

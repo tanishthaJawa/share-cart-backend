@@ -1,14 +1,10 @@
 package com.teleco.share_cart_backend.Controllers;
 
-import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.zxing.WriterException;
-import com.teleco.share_cart_backend.Services.NotificationService;
-import com.teleco.share_cart_backend.Services.UserService;
 import com.teleco.share_cart_backend.models.Cart;
 import com.teleco.share_cart_backend.Services.CartService;
+import com.teleco.share_cart_backend.models.CartDetails;
 import com.teleco.share_cart_backend.Services.QrCodeService;
-import com.teleco.share_cart_backend.models.Product;
-import com.teleco.share_cart_backend.models.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -21,7 +17,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping(path ="api/carts")
+@RequestMapping(path ="api/cart")
 @CrossOrigin(origins ="*")
 @Slf4j
 public class CartController {
@@ -32,19 +28,14 @@ public class CartController {
     @Autowired
     private CartService cartService;
 
-    @Autowired
-    NotificationService notificationService;
-
-    @Autowired
-    UserService userService;
-    @GetMapping("/{id}")
-    public ResponseEntity<Cart> getSharedCart(@PathVariable Long id, @RequestParam String token) {
-        Cart cart = cartService.getCartById(id);
-        if (!cart.getShareToken().equals(token)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
-        }
-        return ResponseEntity.ok(cart);
-    }
+//    @GetMapping("/{id}")
+//    public ResponseEntity<Cart> getSharedCart(@PathVariable Long id, @RequestParam String token) {
+//        Cart cart = cartService.getCartById(id);
+//        if (!cart.getShareToken().equals(token)) {
+//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+//        }
+//        return ResponseEntity.ok(cart);
+//    }
 
 
     @PostMapping("/create/{userId}")
@@ -60,7 +51,7 @@ public class CartController {
         Cart cart = cartService.shareCart(cartId, userIds);
 
         // Generate the unique link for the shared cart
-        String uniqueLink = CartService.generateUniqueLink(cart.getId());
+        String uniqueLink = CartService.generateUniqueLink(cart.getCartId());
 
         // Generate the QR code and return it as a byte array (PNG format)
         try {
@@ -84,43 +75,25 @@ public class CartController {
 
 
     // Get carts shared with a user
-    @GetMapping("/shared/{userId}")
-    public ResponseEntity<List<Cart>> getSharedCarts(@PathVariable Long userId) {
-        List<Cart> carts = cartService.getSharedCarts(userId);
-        return ResponseEntity.ok(carts);
-    }
+//    @GetMapping("/shared/{userId}")
+//    public ResponseEntity<List<Cart>> getSharedCarts(@PathVariable Long userId) {
+//        List<Cart> carts = cartService.getSharedCarts(userId);
+//        return ResponseEntity.ok(carts);
+//    }
 
     // Add an item to a cart
-    @PostMapping("/add-item/{cartId}")
-    public ResponseEntity<Cart> addItemToCart(@PathVariable Long cartId, @RequestBody Product item) {
-        Cart cart = cartService.addItemToCart(cartId, item);
-        return ResponseEntity.ok(cart);
-    }
+//    @PostMapping("/add-item/{cartId}")
+//    public ResponseEntity<Cart> addItemToCart(@PathVariable Long cartId, @RequestBody CartDetails item) {
+//        Cart cart = cartService.addItemToCart(cartId, item);
+//        return ResponseEntity.ok(cart);
+//    }
 
     // Remove an item from a cart
-    @DeleteMapping("/remove-item/{cartId}/{itemId}")
-    public ResponseEntity<Cart> removeItemFromCart(@PathVariable Long cartId, @PathVariable Long itemId) {
-        Cart cart = cartService.removeItemFromCart(cartId, itemId);
-        return ResponseEntity.ok(cart);
-    }
-
-    @PostMapping("/notify/{cartId}")
-    public ResponseEntity<String> sendCartNotification(@PathVariable Long cartId, @RequestBody List<Long> userIds) {
-        // Share cart logic...
-
-         List<User> userList = userService.getUsersByUserIds(userIds);
-        // Send notifications to all users
-        userList.forEach(user -> {
-            try {
-                notificationService.sendNotification(cartService.getCartById(cartId).getShareToken(), "Cart Shared", "A cart has been shared with you!");
-            } catch (FirebaseMessagingException e) {
-                e.printStackTrace();
-            }
-        });
-
-        return ResponseEntity.ok("Cart shared successfully!");
-
-    }
+//    @DeleteMapping("/remove-item/{cartId}/{itemId}")
+//    public ResponseEntity<Cart> removeItemFromCart(@PathVariable Long cartId, @PathVariable Long itemId) {
+//        Cart cart = cartService.removeItemFromCart(cartId, itemId);
+//        return ResponseEntity.ok(cart);
+//    }
 
 
 
